@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import dataclasses
 import logging
 import sys
 import time
@@ -17,7 +18,7 @@ from .llm.base import FatalLLMError
 from .models import RunManifest, RunResult, Status, TriagedRequest
 from .pipeline import read_inbox, run_triage
 from .prompt import prompt_fingerprint
-from .report import compute_aggregates, write_outputs
+from .report import compute_aggregates, format_cost, write_outputs
 
 log = logging.getLogger("triage")
 
@@ -147,7 +148,7 @@ async def _run(args: argparse.Namespace, settings: Settings) -> int:
     print()
     print(
         f"Оброблено: {agg.total}  ·  {manifest.wall_time_sec:.1f} с  ·  "
-        f"{manifest.total_tokens} токенів  ·  ~${manifest.estimated_cost_usd:.4f}"
+        f"{manifest.total_tokens} токенів  ·  {format_cost(manifest.estimated_cost_usd)}"
     )
     print(f"Статуси: {agg.by_status}")
     print(
@@ -181,7 +182,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.rpm is not None:
         overrides["rpm"] = args.rpm
     if overrides:
-        settings = Settings(**{**settings.__dict__, **overrides})
+        # dataclasses.replace, а не __dict__: Settings — frozen зі slots.
+        settings = dataclasses.replace(settings, **overrides)
 
     if args.provider == "gemini" and not settings.api_key:
         log.error(

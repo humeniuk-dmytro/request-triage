@@ -1,0 +1,667 @@
+{
+  "manifest": {
+    "started_at": "2026-08-10T14:55:04.486961",
+    "finished_at": "2026-08-10T14:59:35.425434",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_sha256": "5a890debd4c52907",
+    "input_file": "data/input_requests.csv",
+    "requests_total": 18,
+    "concurrency": 5,
+    "prompt_tokens": 33529,
+    "output_tokens": 3027,
+    "total_tokens": 36556,
+    "estimated_cost_usd": 0.017626,
+    "wall_time_sec": 270.94
+  },
+  "aggregates": {
+    "total": 18,
+    "by_category": {
+      "автоматизація": 6,
+      "інтеграція": 1,
+      "звіт/аналітика": 4,
+      "баг/підтримка": 1,
+      "питання/консультація": 4,
+      "поза скоупом": 2
+    },
+    "by_priority": {
+      "low": 8,
+      "medium": 7,
+      "high": 3
+    },
+    "by_department": {
+      "не визначено": 12,
+      "HR": 1,
+      "SMM": 1,
+      "аналітика": 1,
+      "бухгалтерія": 1,
+      "контент": 1,
+      "продажі": 1
+    },
+    "by_channel": {
+      "Email": 6,
+      "Slack": 6,
+      "Telegram": 6
+    },
+    "by_status": {
+      "ok": 18,
+      "repaired": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "by_confidence": {
+      "low": 0,
+      "medium": 1,
+      "high": 17
+    },
+    "needs_clarification_ids": [
+      "REQ-002",
+      "REQ-011"
+    ],
+    "duplicate_pairs": [
+      [
+        "REQ-013",
+        "REQ-001"
+      ]
+    ],
+    "failed_ids": []
+  },
+  "requests": [
+    {
+      "id": "REQ-001",
+      "channel": "Slack",
+      "timestamp": "2026-06-08T09:14:00",
+      "raw_text": "Привіт! Можна якось автоматизувати щотижневий звіт по Google Ads? Зараз руками вивантажую CSV і копіюю в табличку щопонеділка, займає десь годину. Треба основні метрики по кампаніях.",
+      "extraction": {
+        "reasoning": "Зараз людина регулярно робить ручну роботу з вивантаження CSV і копіювання в таблицю, що є класичним запитом на автоматизацію з середнім пріоритетом.",
+        "category": "автоматизація",
+        "target_department": null,
+        "priority": "medium",
+        "short_summary": "Автоматизувати щотижневе вивантаження метрик кампаній з Google Ads у таблицю.",
+        "requested_actions": [
+          "налаштувати автоматичне перенесення даних з Google Ads у таблицю",
+          "збирати основні метрики по кампаніях автоматично щопонеділка"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": [
+          "Google Ads"
+        ]
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1817,
+        "output_tokens": 171,
+        "latency_ms": 1328,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-002",
+      "channel": "Telegram",
+      "timestamp": "2026-06-08T09:31:00",
+      "raw_text": "хлопці треба бот",
+      "extraction": {
+        "reasoning": "Запит містить лише загальну вимогу створити бота без уточнення його функцій, цілей чи платформ, тому це потребує уточнення.",
+        "category": "автоматизація",
+        "target_department": null,
+        "priority": "low",
+        "short_summary": "Просять створити бота без уточнення деталей.",
+        "requested_actions": [
+          "створити бота"
+        ],
+        "needs_clarification": true,
+        "clarification_questions": [
+          "Які функції має виконувати бот?",
+          "У якій платформі чи месенджері він має працювати?",
+          "З якими іншими системами бот повинен інтегруватися?"
+        ],
+        "confidence": "medium",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1763,
+        "output_tokens": 195,
+        "latency_ms": 16314,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-003",
+      "channel": "Email",
+      "timestamp": "2026-06-08T10:02:00",
+      "raw_text": "Доброго дня. У відділі продажів накопичується багато транскриптів дзвінків з клієнтами. Хочемо, щоб по кожному дзвінку автоматично формувалося коротке саммарі + список домовленостей, і це падало в PlanFix у картку угоди. Це реально?",
+      "extraction": {
+        "reasoning": "Запитують оцінку здійсненності та пояснення щодо впровадження саммарі дзвінків, без негайного виконання дій.",
+        "category": "питання/консультація",
+        "target_department": "продажі",
+        "priority": "low",
+        "short_summary": "Питання щодо можливості автоматичного формування саммарі транскриптів дзвінків у PlanFix.",
+        "requested_actions": [],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": [
+          "PlanFix"
+        ]
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1825,
+        "output_tokens": 128,
+        "latency_ms": 31039,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-004",
+      "channel": "Slack",
+      "timestamp": "2026-06-08T10:20:00",
+      "raw_text": "Питання радше теоретичне: чи можна взагалі за допомогою AI оцінювати якість наших статей у блозі перед публікацією? Поки що нічого впроваджувати не треба, просто цікаво ваша думка.",
+      "extraction": {
+        "reasoning": "Запитують лише думку щодо можливості використання AI без потреби щось впроваджувати.",
+        "category": "питання/консультація",
+        "target_department": null,
+        "priority": "low",
+        "short_summary": "Питання щодо теоретичної можливості оцінки якості статей у блозі за допомогою AI.",
+        "requested_actions": [],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1808,
+        "output_tokens": 110,
+        "latency_ms": 46033,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-005",
+      "channel": "Telegram",
+      "timestamp": "2026-06-08T11:05:00",
+      "raw_text": "ГОРИТЬ. Сьогодні до вечора треба вивантажити список усіх контрагентів з витратами понад 50к за травень, бухгалтерія просить терміново. можете швидко?",
+      "extraction": {
+        "reasoning": "Просять терміново зробити вивантаження даних звітного характеру з дедлайном на сьогодні через запит бухгалтерії.",
+        "category": "звіт/аналітика",
+        "target_department": "бухгалтерія",
+        "priority": "high",
+        "short_summary": "Терміново вивантажити список контрагентів з витратами понад 50к за травень.",
+        "requested_actions": [
+          "вивантажити список контрагентів з витратами понад 50к за травень"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1800,
+        "output_tokens": 147,
+        "latency_ms": 61165,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-006",
+      "channel": "Email",
+      "timestamp": "2026-06-08T11:40:00",
+      "raw_text": "Hi team, we need a small service that takes our weekly analytics export from BigQuery and generates a short plain-language summary of the key changes week-over-week. Output ideally in a Google Doc. Хто може взятись?",
+      "extraction": {
+        "reasoning": "Запит стосується створення нового регулярного процесу збору та саммаризації даних з BigQuery у Google Doc, що належить до категорії звіт/аналітика з середнім пріоритетом.",
+        "category": "звіт/аналітика",
+        "target_department": null,
+        "priority": "medium",
+        "short_summary": "Створити сервіс для генерації текстового саммари тижневих змін з BigQuery у Google Doc.",
+        "requested_actions": [
+          "розробити сервіс для генерації саммари тижневих змін з BigQuery",
+          "налаштувати виведення результату в Google Doc"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": [
+          "BigQuery",
+          "Google Doc"
+        ]
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1805,
+        "output_tokens": 221,
+        "latency_ms": 74973,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-007",
+      "channel": "Slack",
+      "timestamp": "2026-06-08T12:15:00",
+      "raw_text": "У нас зламалась автоматизація по інвойсам з Мети — з понеділка нічого не парситься, рахунки висять. Хто це робив? треба полагодити",
+      "extraction": {
+        "reasoning": "Існуюча автоматизація інвойсів перестала працювати і затримує рахунки, що блокує фінансовий процес і вимагає термінового втручання.",
+        "category": "баг/підтримка",
+        "target_department": null,
+        "priority": "high",
+        "short_summary": "Зламалося парсіння інвойсів з Мети, рахунки не обробляються з понеділка.",
+        "requested_actions": [
+          "полагодити парсіння інвойсів з Мети"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": [
+          "Мета"
+        ]
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1801,
+        "output_tokens": 149,
+        "latency_ms": 74910,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-008",
+      "channel": "Telegram",
+      "timestamp": "2026-06-08T13:02:00",
+      "raw_text": "дякую за вчора, все працює супер 🙌",
+      "extraction": {
+        "reasoning": "Повідомлення є подякою за виконану роботу, а не новим запитом.",
+        "category": "поза скоупом",
+        "target_department": null,
+        "priority": "low",
+        "short_summary": "Подяка за роботу та підтвердження стабільної роботи систем.",
+        "requested_actions": [],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1768,
+        "output_tokens": 103,
+        "latency_ms": 75009,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-009",
+      "channel": "Email",
+      "timestamp": "2026-06-08T13:48:00",
+      "raw_text": "Колеги, в HR хочемо прискорити первинний скринінг резюме на технічні вакансії. Ідея: завантажуємо PDF резюме, на виході — структуровані поля (досвід, стек, відповідність вимогам) і коротка оцінка. Обсяг — десь 30-50 резюме на тиждень.",
+      "extraction": {
+        "reasoning": "Запит спрямований на усунення ручної рутини при обробці резюме за допомогою автоматизованого процесу з чітко визначеним артефактом.",
+        "category": "автоматизація",
+        "target_department": "HR",
+        "priority": "medium",
+        "short_summary": "Просять автоматизувати первинний скринінг і структурування даних з PDF-резюме для технічних вакансій.",
+        "requested_actions": [
+          "налагодження автоматичної обробки PDF резюме",
+          "витягування структурованих полів та оцінки"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1843,
+        "output_tokens": 195,
+        "latency_ms": 75341,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-010",
+      "channel": "Slack",
+      "timestamp": "2026-06-08T14:11:00",
+      "raw_text": "Можна автоматизувати збір згадок про Netpeak в телеграм-каналах і робити дайджест раз на день? І ще окремо — алерт, якщо згадка негативна. Дві задачі по суті, але обидві про моніторинг.",
+      "extraction": {
+        "reasoning": "Просять регулярно збирати згадки та надсилати дайджест із алертами замість ручного моніторингу, що є класичною автоматизацією середнього пріоритету.",
+        "category": "автоматизація",
+        "target_department": null,
+        "priority": "medium",
+        "short_summary": "Налаштувати автоматичний збір згадок про Netpeak у телеграм-каналах для щоденного дайджесту та алертів про негатив.",
+        "requested_actions": [
+          "Налаштувати збір згадок про Netpeak у телеграм-каналах",
+          "Створити щоденний дайджест згадок",
+          "Налаштувати алерт про негативні згадки"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": [
+          "Slack",
+          "Telegram"
+        ]
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1820,
+        "output_tokens": 201,
+        "latency_ms": 75114,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-011",
+      "channel": "Telegram",
+      "timestamp": "2026-06-08T14:55:00",
+      "raw_text": "нам би табличку якусь",
+      "extraction": {
+        "reasoning": "Запит містить лише розмите прохання зробити табличку без зазначення даних та мети, тому це звіт/аналітика з необхідністю уточнення.",
+        "category": "звіт/аналітика",
+        "target_department": null,
+        "priority": "low",
+        "short_summary": "Просять створити таблицю без уточнення даних та призначення.",
+        "requested_actions": [],
+        "needs_clarification": true,
+        "clarification_questions": [
+          "Які саме дані мають бути в таблиці?",
+          "Звідки потрібно брати інформацію для заповнення?",
+          "Для чого використовуватиметься ця таблиця і хто її читатиме?"
+        ],
+        "confidence": "high",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1763,
+        "output_tokens": 190,
+        "latency_ms": 74951,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-012",
+      "channel": "Email",
+      "timestamp": "2026-06-08T15:30:00",
+      "raw_text": "Доброго дня! Хотіли б закупити новий потужний ноутбук для рендеру відео в SMM-відділі, бюджет до 80к. Куди подати заявку?",
+      "extraction": {
+        "reasoning": "Запит стосується закупівлі техніки, що є адміністративною процедурою поза скоупом AI-юніту.",
+        "category": "поза скоупом",
+        "target_department": "SMM",
+        "priority": "low",
+        "short_summary": "Питання щодо закупівлі ноутбука для SMM-відділу.",
+        "requested_actions": [],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1801,
+        "output_tokens": 139,
+        "latency_ms": 74850,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-013",
+      "channel": "Slack",
+      "timestamp": "2026-06-08T16:02:00",
+      "raw_text": "Привіт. Той самий звіт по Google Ads, що Оля просила в понеділок — мені теж дуже потрібен, я в тій же команді. Можна щоб і мені приходив?",
+      "extraction": {
+        "reasoning": "Замовник просить регулярно отримувати вже існуючий звіт, який зараз збирають для іншої людини, що відповідає автоматизації рутинного отримання даних.",
+        "category": "автоматизація",
+        "target_department": null,
+        "priority": "medium",
+        "short_summary": "Просить налаштувати регулярну відправку існуючого звіту по Google Ads на нього.",
+        "requested_actions": [
+          "налаштувати регулярну відправку звіту по Google Ads замовнику"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": [
+          "Google Ads"
+        ]
+      },
+      "possible_duplicate_of": "REQ-001",
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1804,
+        "output_tokens": 145,
+        "latency_ms": 75177,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-014",
+      "channel": "Telegram",
+      "timestamp": "2026-06-08T16:40:00",
+      "raw_text": "є ідея, гляньте https://example.com/some-tool можливо щось схоже зробимо для нас, не горить",
+      "extraction": {
+        "reasoning": "Запитують думку щодо стороннього сервісу з посиланням на майбутнє, впроваджувати зараз нічого не треба, пріоритет низький.",
+        "category": "питання/консультація",
+        "target_department": null,
+        "priority": "low",
+        "short_summary": "Просять оцінити сторонній інструмент для можливого впровадження в майбутньому.",
+        "requested_actions": [],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1787,
+        "output_tokens": 132,
+        "latency_ms": 74772,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-015",
+      "channel": "Email",
+      "timestamp": "2026-06-08T17:12:00",
+      "raw_text": "Команда контенту просить інструмент, який з довгого інтерв'ю (текст 10-15 сторінок) робить 5 коротких постів для соцмереж у нашому tone of voice. Пріоритет середній, треба десь до кінця місяця.",
+      "extraction": {
+        "reasoning": "Просять створити новий інструмент для автоматичного створення постів замість ручної роботи, і це економить час регулярного процесу.",
+        "category": "автоматизація",
+        "target_department": "контент",
+        "priority": "medium",
+        "short_summary": "Створити інструмент для генерації 5 коротких постів з довгого текстового інтерв'ю.",
+        "requested_actions": [
+          "розробити інструмент для генерації постів з інтерв'ю"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1825,
+        "output_tokens": 171,
+        "latency_ms": 74908,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-016",
+      "channel": "Slack",
+      "timestamp": "2026-06-09T09:08:00",
+      "raw_text": "чат це нормально що в ассистента по базі знань іноді відповіді не зовсім по темі? просто хочу зрозуміти це баг чи так і має бути",
+      "extraction": {
+        "reasoning": "Користувач просить пояснити поведінку існуючого інструменту і не вимагає ніяких змін чи впроваджень прямо зараз.",
+        "category": "питання/консультація",
+        "target_department": null,
+        "priority": "low",
+        "short_summary": "Питання про те, чи є нормальна неточна поведінка асистента по базі знань.",
+        "requested_actions": [],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": []
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1797,
+        "output_tokens": 130,
+        "latency_ms": 74885,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-017",
+      "channel": "Telegram",
+      "timestamp": "2026-06-09T09:50:00",
+      "raw_text": "терміново треба інтеграція слака з планфіксом щоб задачі з каналу #support автоматом створювались тікетами. дуже багато ручної роботи зараз",
+      "extraction": {
+        "reasoning": "Хоча згадано ручну роботу, головним проханням є з'єднання двох конкретних систем у визначеному напрямку, а пріоритет високий через вимогу терміновості.",
+        "category": "інтеграція",
+        "target_department": null,
+        "priority": "high",
+        "short_summary": "Просять налаштувати створення тікетів у Планфіксі з повідомлень каналу #support у Слаці.",
+        "requested_actions": [
+          "інтегрувати Slack із Планфіксом для автоматичного створення задач з каналу #support"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": [
+          "Slack",
+          "Планфікс"
+        ]
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1794,
+        "output_tokens": 170,
+        "latency_ms": 75129,
+        "error": null
+      }
+    },
+    {
+      "id": "REQ-018",
+      "channel": "Email",
+      "timestamp": "2026-06-09T10:25:00",
+      "raw_text": "Доброго ранку. Аналітика хоче дашборд, який раз на день підтягує дані з BigQuery і показує аномалії у витратах по підрядниках (різкі стрибки). Бажано з поясненням природною мовою, чому щось виглядає підозріло.",
+      "extraction": {
+        "reasoning": "Запитують новий дашборд з аналізом даних та поясненнями, що належить до категорії звітності та аналітики із середнім пріоритетом.",
+        "category": "звіт/аналітика",
+        "target_department": "аналітика",
+        "priority": "medium",
+        "short_summary": "Створити щоденний дашборд із BigQuery для виявлення аномалій у витратах по підрядниках з текстовими поясненнями.",
+        "requested_actions": [
+          "розробити дашборд для відстеження аномалій витрат по підрядниках",
+          "налаштувати щоденне оновлення даних з BigQuery",
+          "додати автоматичні пояснення природною мовою для підозрілих витрат"
+        ],
+        "needs_clarification": false,
+        "clarification_questions": [],
+        "confidence": "high",
+        "mentioned_systems": [
+          "BigQuery"
+        ]
+      },
+      "possible_duplicate_of": null,
+      "meta": {
+        "status": "ok",
+        "failure_kind": null,
+        "attempts": 1,
+        "repairs": 0,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_tokens": 1827,
+        "output_tokens": 241,
+        "latency_ms": 75182,
+        "error": null
+      }
+    }
+  ]
+}

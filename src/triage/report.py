@@ -26,6 +26,11 @@ from .models import (
 NOT_SET = "не визначено"
 
 
+def format_cost(value: float | None) -> str:
+    """Прочерк для моделі, якої немає в таблиці цін — замість оманливого $0.0000."""
+    return f"${value:.4f}" if value is not None else "оцінка недоступна"
+
+
 def compute_aggregates(
     results: list[TriagedRequest],
     duplicates: list[DuplicatePair] | None = None,
@@ -80,7 +85,7 @@ def render_report_md(result: RunResult, duplicates: list[DuplicatePair]) -> str:
         f"Файл: `{m.input_file}` · запитів: **{m.requests_total}** · "
         f"модель: `{m.model}` (провайдер `{m.provider}`)",
         f"Прогін: {m.started_at:%Y-%m-%d %H:%M:%S} · {m.wall_time_sec:.1f} с · "
-        f"{m.total_tokens} токенів · оцінка вартості ${m.estimated_cost_usd:.4f}",
+        f"{m.total_tokens} токенів · вартість {format_cost(m.estimated_cost_usd)}",
         "",
     ]
 

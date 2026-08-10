@@ -73,9 +73,14 @@ class GeminiClient:
             "response_schema": schema,
             "candidate_count": 1,
         }
-        # Вимикаємо «мислення»: воно оплачується як вихідні токени й для
+        # Вимикаємо «мислення»: воно оплачується як вихідні токени, а для
         # класифікації за готовою таксономією нічого не додає — роль ланцюжка
         # міркувань виконує поле reasoning, яке генерується першим.
+        #
+        # Тільки для 2.5: gemini-3.5-flash-lite відповідає на thinking_budget=0
+        # помилкою 400, а в gemini-3.5-flash мислення увімкнене й вимкнути його
+        # не можна — саме тому той самий файл коштує там у 15 разів більше
+        # (порівняння в README).
         if self.model.startswith("gemini-2.5"):
             cfg["thinking_config"] = types.ThinkingConfig(thinking_budget=0)
         return types.GenerateContentConfig(**cfg)

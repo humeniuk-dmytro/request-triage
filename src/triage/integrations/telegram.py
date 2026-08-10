@@ -17,6 +17,7 @@ import httpx
 from ..config import Settings
 from ..dedupe import DuplicatePair
 from ..models import RunResult
+from ..report import format_cost
 
 log = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ def render_digest(result: RunResult, duplicates: list[DuplicatePair]) -> str:
 
     lines = [
         "<b>Тріаж вхідних запитів</b>",
-        f"Оброблено: {agg.total} · {m.wall_time_sec:.1f} с · ~${m.estimated_cost_usd:.4f}",
+        f"Оброблено: {agg.total} · {m.wall_time_sec:.1f} с · {format_cost(m.estimated_cost_usd)}",
         "",
         "<b>Категорії</b>",
     ]

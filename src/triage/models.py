@@ -392,7 +392,7 @@ class RunManifest(BaseModel):
     prompt_tokens: int
     output_tokens: int
     total_tokens: int
-    estimated_cost_usd: float
+    estimated_cost_usd: float | None
     wall_time_sec: float
 
 
