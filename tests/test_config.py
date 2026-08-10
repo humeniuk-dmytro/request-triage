@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from triage.config import PRICING_USD_PER_1M, Settings, estimate_cost_usd
+from triage.config import DEFAULT_GOOGLE_SCOPE, PRICING_USD_PER_1M, Settings, estimate_cost_usd
 from triage.report import format_cost
 
 
@@ -41,3 +41,14 @@ def test_broken_env_values_fall_back_to_defaults(monkeypatch: pytest.MonkeyPatch
 
     assert settings.rpm > 0
     assert settings.concurrency >= 1
+
+
+def test_google_scope_is_narrow_by_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Ключ у файлі має відкривати один аркуш, а не пів-акаунта."""
+    monkeypatch.delenv("GOOGLE_SCOPES", raising=False)
+    assert Settings.from_env().google_scopes == (DEFAULT_GOOGLE_SCOPE,)
+
+
+def test_google_scopes_are_configurable(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GOOGLE_SCOPES", "https://a/scope1, https://a/scope2")
+    assert Settings.from_env().google_scopes == ("https://a/scope1", "https://a/scope2")

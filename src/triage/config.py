@@ -35,6 +35,12 @@ def estimate_cost_usd(model: str, prompt_tokens: int, output_tokens: int) -> flo
     )
 
 
+# Рівно те, що потрібно, щоб писати у вже пошарену таблицю. Ширші права нічого
+# не додають: service account — окрема особа з власним порожнім Drive, і доступ
+# до чужого файлу дає шеринг, а не скоуп. Перевизначається через GOOGLE_SCOPES.
+DEFAULT_GOOGLE_SCOPE = "https://www.googleapis.com/auth/spreadsheets"
+
+
 def _int_env(name: str, default: int) -> int:
     raw = os.getenv(name, "").strip()
     try:
@@ -63,6 +69,7 @@ class Settings:
     telegram_chat_id: str | None
     google_service_account_file: str | None
     google_sheet_id: str | None
+    google_scopes: tuple[str, ...]
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -83,4 +90,9 @@ class Settings:
             telegram_chat_id=os.getenv("TELEGRAM_CHAT_ID") or None,
             google_service_account_file=os.getenv("GOOGLE_SERVICE_ACCOUNT_FILE") or None,
             google_sheet_id=os.getenv("GOOGLE_SHEET_ID") or None,
+            google_scopes=tuple(
+                s.strip()
+                for s in os.getenv("GOOGLE_SCOPES", DEFAULT_GOOGLE_SCOPE).split(",")
+                if s.strip()
+            ),
         )

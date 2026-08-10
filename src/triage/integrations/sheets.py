@@ -7,6 +7,14 @@
 Аркуш перезаписується цілком, а не доповнюється. Прогін тріажу — це знімок
 інбоксу на момент часу; дописування створило б таблицю, де той самий запит
 лежить у трьох різних станах, і незрозуміло, який із них актуальний.
+
+Про скоупи. Service account — окрема особа з власним порожнім Drive: доступ до
+конкретної таблиці дає не скоуп, а шеринг цієї таблиці на його email. Тому за
+замовчуванням стоїть рівно `spreadsheets` — ширші права не додають можливостей,
+а лише збільшують те, що втрачається разом із файлом ключа. Значення винесене
+в `GOOGLE_SCOPES` для випадків, коли потрібне інше (наприклад `drive.file`,
+щоб сервіс сам створював таблиці — але тоді вони житимуть у Drive сервісного
+акаунта, і їх доведеться шарити назад людині).
 """
 
 from __future__ import annotations
@@ -40,7 +48,7 @@ def export_to_sheet(settings: Settings, results: list[TriagedRequest]) -> bool:
     try:
         credentials = Credentials.from_service_account_file(
             settings.google_service_account_file,
-            scopes=["https://www.googleapis.com/auth/spreadsheets"],
+            scopes=settings.google_scopes,
         )
         spreadsheet = gspread.authorize(credentials).open_by_key(settings.google_sheet_id)
 
