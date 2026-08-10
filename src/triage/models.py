@@ -181,7 +181,9 @@ class InboxRow(BaseModel):
 
     id: str = Field(min_length=1)
     channel: str = ""
-    timestamp: datetime | None = None
+    # Порожня клітинка часу — норма для реального вивантаження, а не привід
+    # викинути рядок: текст запиту в ньому нікуди не подівся.
+    timestamp: Annotated[datetime | None, BeforeValidator(_norm_optional_str)] = None
     raw_text: str = ""
 
 
