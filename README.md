@@ -339,7 +339,7 @@ docker run --rm --env-file .env -v "$PWD/out:/app/out" request-triage
 
 ```bash
 uv sync              # залежності
-uv run pytest -q     # 68 тестів, без мережі й без ключа
+uv run pytest -q     # 77 тестів, без мережі й без ключа
 uv run ruff check .  # лінтер
 ```
 
