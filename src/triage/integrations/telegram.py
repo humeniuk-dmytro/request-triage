@@ -16,7 +16,7 @@ import httpx
 
 from ..config import Settings
 from ..dedupe import DuplicatePair
-from ..models import RunResult
+from ..models import Priority, RunResult
 from ..report import format_cost
 
 log = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ def render_digest(result: RunResult, duplicates: list[DuplicatePair]) -> str:
     lines += ["", "<b>Пріоритет</b>"]
     lines += [f"· {k}: {v}" for k, v in agg.by_priority.items() if v]
 
-    urgent = [r for r in result.requests if r.extraction and r.extraction.priority == "high"]
+    urgent = [r for r in result.requests if r.extraction and r.extraction.priority is Priority.HIGH]
     if urgent:
         lines += ["", "<b>Сьогодні (high)</b>"]
         lines += [f"· <b>{r.id}</b> — {r.extraction.short_summary}" for r in urgent if r.extraction]

@@ -68,13 +68,16 @@ async def _run(args: argparse.Namespace, settings: Settings) -> int:
 
     client = build_client(args.provider, settings)
     concurrency = args.concurrency or settings.concurrency
+    # Обмежувач вішається лише на мережевих провайдерів — не варто писати в лог
+    # ліміт, якого в цьому прогоні не існує.
+    pace = f" ліміт={settings.rpm:.0f}/хв" if args.provider != "fake" and settings.rpm else ""
     log.info(
-        "обробляю %d запитів: провайдер=%s модель=%s паралельність=%d ліміт=%.0f/хв",
+        "обробляю %d запитів: провайдер=%s модель=%s паралельність=%d%s",
         len(rows),
         client.name,
         client.model,
         concurrency,
-        settings.rpm,
+        pace,
     )
 
     started_at = datetime.now()

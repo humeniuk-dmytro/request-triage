@@ -114,10 +114,13 @@ def render_report_md(result: RunResult, duplicates: list[DuplicatePair]) -> str:
     out += ["### Потребують уточнення", ""]
     if agg.needs_clarification_ids:
         for rid in agg.needs_clarification_ids:
-            r = by_id[rid]
-            assert r.extraction is not None
-            out += [f"**{rid}** ({r.channel}) — {r.extraction.short_summary}", ""]
-            out += [f"- {q}" for q in r.extraction.clarification_questions]
+            # Не assert: під `python -O` він зникає, і замість зрозумілої
+            # поведінки лишається AttributeError на None.
+            extraction = by_id[rid].extraction
+            if extraction is None:
+                continue
+            out += [f"**{rid}** ({by_id[rid].channel}) — {extraction.short_summary}", ""]
+            out += [f"- {q}" for q in extraction.clarification_questions]
             out += [""]
     else:
         out += ["Немає.", ""]
