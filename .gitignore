@@ -1,0 +1,18 @@
+.env
+*.env
+!.env.example
+
+# креденшели Google service account — ніколи в репозиторій
+service_account.json
+*-credentials.json
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+.DS_Store
+.idea/
+.vscode/
