@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - run: uv sync --frozen --all-extras
+
+      - name: Лінтер
+        run: uv run ruff check .
+
+      - name: Тести
+        run: uv run pytest -q
+
+      # Прогін наскрізь на fake-провайдері: перевіряє, що конвеєр і запис
+      # файлів живі, і не потребує ані ключа, ані мережі, ані бюджету.
+      - name: Наскрізний прогін без ключа
+        run: |
+          uv run triage --provider fake --out out-ci
+          test -s out-ci/output.json
+          test -s out-ci/report.md
+          test -s out-ci/output.csv
