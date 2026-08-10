@@ -8,8 +8,10 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
@@ -18,6 +20,31 @@ from .base import FatalLLMError, LLMResponse, Message, TransientLLMError
 
 # Коди, які лікуються повтором того самого запиту.
 _RETRYABLE_CODES = {408, 409, 429, 500, 502, 503, 504}
+
+# Gemini називає рекомендовану витримку у двох виглядах: як RetryInfo
+# ('retryDelay': '28s') і як текст у message ('Please retry in 28.4s').
+_RETRY_DELAY_RE = re.compile(
+    r"retryDelay['\"]?\s*:\s*['\"](\d+(?:\.\d+)?)s|retry in (\d+(?:\.\d+)?)s"
+)
+
+# Стеля на витримку від сервера: при вичерпаній добовій квоті він може
+# попросити чекати годинами — це вже не повтор, а зупинка роботи.
+_MAX_SERVER_DELAY_SEC = 90.0
+
+
+def _retry_after(exc: Exception) -> float | None:
+    """Витримка, яку назвав сам сервер. Вона точніша за будь-яку нашу здогадку."""
+    match = _RETRY_DELAY_RE.search(str(exc))
+    if not match:
+        return None
+    return min(float(match.group(1) or match.group(2)), _MAX_SERVER_DELAY_SEC)
+
+
+def _short(exc: Exception) -> str:
+    """Помилки Gemini приїжджають портянкою на пів екрана — лишаємо суть."""
+    text = " ".join(str(exc).split())
+    match = re.search(r"'message':\s*'([^']{0,200})", text)
+    return match.group(1) if match else text[:200]
 
 
 class GeminiClient:
@@ -72,12 +99,18 @@ class GeminiClient:
         except genai_errors.APIError as exc:
             code = getattr(exc, "code", None)
             if code in _RETRYABLE_CODES:
-                raise TransientLLMError(f"Gemini {code}: {exc}") from exc
-            raise FatalLLMError(f"Gemini {code}: {exc}") from exc
-        except TimeoutError as exc:
-            raise TransientLLMError(f"Таймаут звернення до Gemini: {exc}") from exc
-        except Exception as exc:  # обриви з'єднання нижче рівня SDK
+                raise TransientLLMError(
+                    f"Gemini {code}: {_short(exc)}", retry_after=_retry_after(exc)
+                ) from exc
+            raise FatalLLMError(f"Gemini {code}: {_short(exc)}") from exc
+        except (TimeoutError, httpx.TransportError) as exc:
+            # Обриви й таймаути нижче рівня SDK — теж випадковість, повторюємо.
             raise TransientLLMError(f"Мережевий збій при зверненні до Gemini: {exc}") from exc
+        except Exception as exc:  # noqa: BLE001
+            # Усе інше — не мережа, а наша або чужа помилка в коді чи конфігу.
+            # Повторювати її безглуздо, тому Fatal: рядок стане `failed`,
+            # прогін не впаде, причина буде видна у звіті.
+            raise FatalLLMError(f"Неочікувана помилка клієнта Gemini: {exc!r}") from exc
 
         usage = response.usage_metadata
         text = response.text or ""

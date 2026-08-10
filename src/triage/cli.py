@@ -41,6 +41,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--model", default=None, help="перевизначити модель з .env")
     p.add_argument("--concurrency", type=int, default=None, help="паралельних запитів")
+    p.add_argument(
+        "--rpm",
+        type=float,
+        default=None,
+        help="ліміт запитів на хвилину (0 — без обмеження)",
+    )
     p.add_argument("--limit", type=int, default=None, help="обробити лише перші N рядків")
     p.add_argument("--no-dedupe", action="store_true", help="пропустити прохід по дублях")
     p.add_argument("--notify", action="store_true", help="надіслати дайджест у Telegram")
@@ -62,11 +68,12 @@ async def _run(args: argparse.Namespace, settings: Settings) -> int:
     client = build_client(args.provider, settings)
     concurrency = args.concurrency or settings.concurrency
     log.info(
-        "обробляю %d запитів: провайдер=%s модель=%s паралельність=%d",
+        "обробляю %d запитів: провайдер=%s модель=%s паралельність=%d ліміт=%.0f/хв",
         len(rows),
         client.name,
         client.model,
         concurrency,
+        settings.rpm,
     )
 
     started_at = datetime.now()
@@ -162,9 +169,19 @@ def main(argv: list[str] | None = None) -> int:
         format="%(levelname)-7s %(message)s",
         stream=sys.stderr,
     )
+    if not args.verbose:
+        # SDK і http-клієнт логують кожен виклик на INFO; у звичайному прогоні
+        # це ховає власні повідомлення про хід обробки. З -v усе повертається.
+        for noisy in ("google_genai", "httpx", "httpcore", "urllib3"):
+            logging.getLogger(noisy).setLevel(logging.WARNING)
     settings = Settings.from_env()
+    overrides = {}
     if args.model:
-        settings = Settings(**{**settings.__dict__, "model": args.model})
+        overrides["model"] = args.model
+    if args.rpm is not None:
+        overrides["rpm"] = args.rpm
+    if overrides:
+        settings = Settings(**{**settings.__dict__, **overrides})
 
     if args.provider == "gemini" and not settings.api_key:
         log.error(

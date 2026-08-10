@@ -7,12 +7,15 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 from typing import Any
 
 import pytest
 
 from triage.models import InboxRow
+
+_REAL_SLEEP = asyncio.sleep
 
 VALID_PAYLOAD: dict[str, Any] = {
     "reasoning": "Просять прибрати ручну роботу, дедлайну немає.",
@@ -44,10 +47,27 @@ def row() -> InboxRow:
 
 
 @pytest.fixture(autouse=True)
-def no_backoff_sleep(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Витримки між повторами реальні в проді й безглузді в тестах."""
+def sleeps(monkeypatch: pytest.MonkeyPatch) -> list[float]:
+    """Витримки між повторами реальні в проді й безглузді в тестах.
 
-    async def instant(_seconds: float) -> None:
-        return None
+    Замість очікування збираємо тривалості: так тести і швидкі, і можуть
+    перевірити, що пауза була саме такою, як просив сервер.
+    """
+    recorded: list[float] = []
+
+    async def instant(seconds: float) -> None:
+        recorded.append(seconds)
 
     monkeypatch.setattr("triage.extractor.asyncio.sleep", instant)
+    return recorded
+
+
+@pytest.fixture
+def real_sleep(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Повертає справжній asyncio.sleep.
+
+    Патч вище чіпляється до модуля asyncio, тобто діє глобально. Тестам, які
+    міряють реальний темп обмежувача, потрібне справжнє очікування — вони
+    просять цю фікстуру, і вона перекриває патч (autouse застосовується раніше).
+    """
+    monkeypatch.setattr(asyncio, "sleep", _REAL_SLEEP)

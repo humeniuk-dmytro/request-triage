@@ -317,10 +317,24 @@ GEMINI_RESPONSE_SCHEMA: dict[str, Any] = {
 # --------------------------------------------------------------------------- #
 
 
+class FailureKind(StrEnum):
+    """Через що саме не вийшло. Різні причини вимагають різної реакції:
+
+    `validation` — модель не тримає контракт: правити промпт або схему.
+    `transient` — впертись у ліміт чи мережу: знизити темп, повторити пізніше.
+    `fatal` — ключ, доступ, конфіг: людина має щось полагодити, повтор марний.
+    """
+
+    VALIDATION = "validation"
+    TRANSIENT = "transient"
+    FATAL = "fatal"
+
+
 class ProcessingMeta(BaseModel):
     """Технічний слід обробки. Дає відповідь на 'чому цей запис такий'."""
 
     status: Status
+    failure_kind: FailureKind | None = None
     attempts: int = 0  # звернень до API, разом із повторами після 429/5xx
     repairs: int = 0  # скільки разів просили виправити невалідний вивід
     model: str = ""

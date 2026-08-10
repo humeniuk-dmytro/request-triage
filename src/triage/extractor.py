@@ -37,6 +37,7 @@ from .llm.base import (
 from .models import (
     GEMINI_RESPONSE_SCHEMA,
     Extraction,
+    FailureKind,
     InboxRow,
     ProcessingMeta,
     Status,
@@ -107,7 +108,14 @@ async def call_with_retry(
         except TransientLLMError as exc:
             if attempts > max_retries:
                 raise
-            sleep_for = delay + random.uniform(0, delay / 2)
+            # Якщо сервер сам назвав витримку — слухаємо його. Наша експонента
+            # проти «retry in 28s» дає лише ще одну відмову і ще один запит
+            # у ліміт, який щойно вичерпано.
+            sleep_for = (
+                exc.retry_after + random.uniform(0, 1)
+                if exc.retry_after is not None
+                else delay + random.uniform(0, delay / 2)
+            )
             log.warning(
                 "тимчасовий збій (%s), спроба %d/%d, пауза %.1fс",
                 exc,
@@ -153,6 +161,7 @@ async def extract_one(
                 max_retries=max_retries,
             )
         except TransientLLMError as exc:
+            meta.failure_kind = FailureKind.TRANSIENT
             meta.error = f"вичерпано повтори після транспортних збоїв: {exc}"
             break
 
@@ -168,6 +177,7 @@ async def extract_one(
             )
             log.info("невалідний вивід для %s (спроба %d): %s", row.id, repair_no + 1, last_error)
             if repair_no == max_repairs:
+                meta.failure_kind = FailureKind.VALIDATION
                 meta.error = f"вивід не пройшов валідацію: {last_error}"
                 break
             # Показуємо моделі її ж відповідь і конкретну претензію до неї.
@@ -204,6 +214,7 @@ async def extract_one_safe(
             **row.model_dump(),
             meta=ProcessingMeta(
                 status=Status.FAILED,
+                failure_kind=FailureKind.FATAL,
                 model=client.model,
                 attempts=1,
                 error=f"фатальна помилка звернення до моделі: {exc}",

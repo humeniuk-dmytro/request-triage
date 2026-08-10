@@ -12,6 +12,7 @@ from .base import (
     TransientLLMError,
 )
 from .fake import FakeClient
+from .ratelimit import RateLimitedClient, RateLimiter
 
 __all__ = [
     "FatalLLMError",
@@ -21,17 +22,23 @@ __all__ = [
     "Message",
     "TransientLLMError",
     "FakeClient",
+    "RateLimitedClient",
+    "RateLimiter",
     "build_client",
 ]
 
 
 def build_client(provider: str, settings: Settings) -> LLMClient:
     if provider == "fake":
+        # Заглушка не ходить у мережу — обмежувати нічого.
         return FakeClient()
     if provider == "gemini":
         # Імпорт усередині: без ключа й без потреби в Gemini застосунок
         # має запускатись, навіть якщо SDK не встановлено.
         from .gemini import GeminiClient
 
-        return GeminiClient(api_key=settings.api_key or "", model=settings.model)
+        client: LLMClient = GeminiClient(api_key=settings.api_key or "", model=settings.model)
+        if settings.rpm > 0:
+            client = RateLimitedClient(client, settings.rpm)
+        return client
     raise ValueError(f"Невідомий провайдер: {provider!r}. Доступні: gemini, fake.")

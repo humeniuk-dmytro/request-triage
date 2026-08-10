@@ -20,7 +20,16 @@ class LLMError(Exception):
 
 
 class TransientLLMError(LLMError):
-    """Тимчасовий збій: rate limit, 5xx, таймаут, обрив. Має сенс повторити."""
+    """Тимчасовий збій: rate limit, 5xx, таймаут, обрив. Має сенс повторити.
+
+    `retry_after` — витримка, яку назвав сам сервер. Коли Gemini у відповіді на
+    429 пише «Please retry in 28s», вгадувати експонентою безглуздо: наша
+    здогадка в 4 секунди — це просто ще один 429.
+    """
+
+    def __init__(self, message: str, retry_after: float | None = None) -> None:
+        super().__init__(message)
+        self.retry_after = retry_after
 
 
 class FatalLLMError(LLMError):

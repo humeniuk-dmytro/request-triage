@@ -36,11 +36,20 @@ def _int_env(name: str, default: int) -> int:
         return default
 
 
+def _float_env(name: str, default: float) -> float:
+    raw = os.getenv(name, "").strip()
+    try:
+        return float(raw) if raw else default
+    except ValueError:
+        return default
+
+
 @dataclass(frozen=True, slots=True)
 class Settings:
     api_key: str | None
     model: str
     concurrency: int
+    rpm: float
     max_retries: int  # повтори при транспортних збоях (429/5xx/таймаут)
     max_repairs: int  # повтори при невалідному виводі моделі
     telegram_bot_token: str | None
@@ -55,6 +64,11 @@ class Settings:
             api_key=os.getenv("GEMINI_API_KEY") or None,
             model=os.getenv("TRIAGE_MODEL", "gemini-2.5-flash").strip(),
             concurrency=max(1, _int_env("TRIAGE_CONCURRENCY", 5)),
+            # Безкоштовний тір gemini-2.5-flash дозволяє 5 запитів/хв. Тримаємо
+            # 4 — запас у 20%: рівно на межі провайдер усе одно віддає 429, бо
+            # рахує у власних вікнах, не синхронних із нашими.
+            # 0 вимикає обмежувач (платний тір або інша модель).
+            rpm=max(0.0, _float_env("TRIAGE_RPM", 4.0)),
             max_retries=max(0, _int_env("TRIAGE_MAX_RETRIES", 3)),
             max_repairs=max(0, _int_env("TRIAGE_MAX_REPAIRS", 1)),
             telegram_bot_token=os.getenv("TELEGRAM_BOT_TOKEN") or None,

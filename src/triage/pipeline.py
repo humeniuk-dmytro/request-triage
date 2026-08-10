@@ -18,7 +18,7 @@ from pydantic import ValidationError
 
 from .extractor import extract_one_safe
 from .llm.base import LLMClient
-from .models import InboxRow, ProcessingMeta, Status, TriagedRequest
+from .models import FailureKind, InboxRow, ProcessingMeta, Status, TriagedRequest
 
 log = logging.getLogger(__name__)
 
@@ -71,6 +71,11 @@ class _CircuitBreaker:
     Невірний ключ або відсутній доступ до моделі провалить кожен запит.
     Без запобіжника ми акуратно, з витримками й повторами, дійдемо до кінця
     файлу — витративши квоту й час на гарантовано порожній результат.
+
+    Рахує ЛИШЕ фатальні збої. Вичерпаний ліміт запитів — не зламаний конфіг:
+    це нормальний стан безкоштовного тіру, який лікується темпом, а не
+    зупинкою прогону. Перша версія цього не розрізняла й глушила прогін на
+    першій же серії 429.
     """
 
     def __init__(self, threshold: int = 3) -> None:
@@ -114,6 +119,7 @@ async def run_triage(
                     **row.model_dump(),
                     meta=ProcessingMeta(
                         status=Status.FAILED,
+                        failure_kind=FailureKind.FATAL,
                         model=client.model,
                         error="прогін зупинено запобіжником після серії збоїв поспіль",
                     ),
@@ -121,7 +127,7 @@ async def run_triage(
             result = await extract_one_safe(
                 client, row, max_retries=max_retries, max_repairs=max_repairs
             )
-        breaker.record(result.meta.status is not Status.FAILED)
+        breaker.record(result.meta.failure_kind is not FailureKind.FATAL)
         if on_done is not None:
             on_done(result)
         return result
