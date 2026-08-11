@@ -1,5 +1,7 @@
 # Тріаж вхідних запитів AI-юніту
 
+[![CI](https://github.com/humeniuk-dmytro/request-triage/actions/workflows/ci.yml/badge.svg)](https://github.com/humeniuk-dmytro/request-triage/actions/workflows/ci.yml)
+
 Читає вивантаження інбоксу (`input_requests.csv`), проганяє кожен запит через
 LLM і повертає структуру, з якою вже можна працювати: категорія, відділ,
 пріоритет, суть, конкретні дії та питання на уточнення. На виході — `output.json`,
