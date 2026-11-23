@@ -2,6 +2,12 @@
 
 [![CI](https://github.com/humeniuk-dmytro/request-triage/actions/workflows/ci.yml/badge.svg)](https://github.com/humeniuk-dmytro/request-triage/actions/workflows/ci.yml)
 
+> **English summary.** A Python CLI that turns each request from an inbox export (CSV) into structured data —
+> category, department, priority, summary, actions and clarifying questions — using Gemini structured output,
+> strict Pydantic validation and one repair call on invalid output. A second LLM pass finds duplicate requests.
+> Outputs JSON, a Markdown report and CSV; optional Google Sheets and Telegram integrations; offline tests and
+> GitHub Actions CI. The rest of this README is in Ukrainian.
+
 Читає вивантаження інбоксу (`input_requests.csv`), проганяє кожен запит через
 LLM і повертає структуру, з якою вже можна працювати: категорія, відділ,
 пріоритет, суть, конкретні дії та питання на уточнення. На виході — `output.json`,
